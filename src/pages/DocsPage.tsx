@@ -4,7 +4,7 @@ import { Markdown } from '@/components/docs/Markdown';
 import { Modal } from '@/components/ui/modal';
 import { lecture01RiskAndReturnMarkdown, lecture02QuantitativeMethodsAndMarkowitzMarkdown, lecture03CapmAndAptMarkdown } from '@/content/notes';
 import { chapter05RiskAndReturnMarkdown, chapter06RiskUtilityAndCapitalAllocationMarkdown, chapter07OptimalRiskyPortfoliosMarkdown, chapter08IndexModelsMarkdown, chapter09CapmMarkdown, chapter10AptAndMultifactorMarkdown } from '@/content/book/chapters';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 export function DocsPage() {
   const [openModal, setOpenModal] = useState<'lecture1' | 'lecture2' | 'lecture3' | 'chapter5' | 'chapter6' | 'chapter7' | 'chapter8' | 'chapter9' | 'chapter10' | null>(null);

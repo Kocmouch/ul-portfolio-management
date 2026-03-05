@@ -1,11 +1,46 @@
 import React, { useMemo, useRef, useState } from 'react';
+import { resolveCssVar } from '@/lib/utils';
 
 type Point = { x: number; y: number };
 export type Series = { name: string; points: Point[]; color?: string; visible?: boolean; type?: 'scatter' | 'bar' };
 
-const defaultColors = ['#3b82f6', '#ef4444', '#10b981', '#f59e0b'];
+const defaultColors = ['var(--color-chart-1)', 'var(--color-chart-2)', 'var(--color-chart-3)', 'var(--color-chart-4)'];
+
+// resolve css variable colors at runtime
+function resolveColor(c?: string) {
+  if (!c) return null;
+  const m = c.match(/var\((--[^)]+)\)/);
+  if (m) {
+    const varName = m[1];
+    const resolved = varName ? resolveCssVar(varName) : undefined;
+    return resolved || c;
+  }
+  return c;
+}
+
+// dark‑mode detection helper (same approach as ChartJSChart)
+function useIsDark() {
+  const check = () =>
+    typeof document !== 'undefined' &&
+    (document.documentElement.classList.contains('dark') ||
+      document.body.classList.contains('dark'));
+
+  const [dark, setDark] = useState(check);
+  React.useEffect(() => {
+    const obs = new MutationObserver(() => setDark(check()));
+    if (document.documentElement) {
+      obs.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    }
+    if (document.body) {
+      obs.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    }
+    return () => obs.disconnect();
+  }, []);
+  return dark;
+}
 
 export function InteractiveChart({ series = [], width = 680, height = 300, xLabel = '', yLabel = '' }: { series?: Series[]; width?: number; height?: number; xLabel?: string; yLabel?: string }) {
+  const isDark = useIsDark();
   const margin = { top: 12, right: 12, bottom: 36, left: 48 };
   const plotW = width - margin.left - margin.right;
   const plotH = height - margin.top - margin.bottom;
@@ -27,7 +62,7 @@ export function InteractiveChart({ series = [], width = 680, height = 300, xLabe
 
   const lines = useMemo(() => {
     return seriesList.map((s, i) => ({
-      color: s?.color ?? defaultColors[i % defaultColors.length],
+      color: resolveColor(s?.color) ?? resolveColor(defaultColors[i % defaultColors.length]) ?? defaultColors[i % defaultColors.length],
       path: s?.points ? s.points.map((p) => `${xToPx(p.x)},${yToPx(p.y)}`).join(' ') : '',
     }));
   }, [series, xDomain, yDomain]);
@@ -86,15 +121,28 @@ export function InteractiveChart({ series = [], width = 680, height = 300, xLabe
         ))}
       </div>
       <svg ref={svgRef} width={width} height={height} onWheel={onWheel} onMouseMove={onMove} onMouseLeave={onLeave} style={{ touchAction: 'none', cursor: 'crosshair' }}>
-        <rect x={margin.left} y={margin.top} width={plotW} height={plotH} fill='#fff' stroke='#e5e7eb' />
+        <rect
+          x={margin.left}
+          y={margin.top}
+          width={plotW}
+          height={plotH}
+          fill={isDark ? resolveCssVar('--color-card') ?? '#1f2937' : resolveCssVar('--color-card') ?? '#ffffff'}
+          stroke={isDark ? resolveCssVar('--color-border') ?? '#4b5563' : resolveCssVar('--color-border') ?? '#e5e7eb'}
+        />
 
         {Array.from({ length: 4 }).map((_, i) => {
           const t = yDomain[0] + ((i / 3) * (yDomain[1] - yDomain[0]));
           const y = yToPx(t);
           return (
             <g key={i}>
-              <line x1={margin.left} x2={margin.left + plotW} y1={y} y2={y} stroke='#f3f4f6' />
-              <text x={8} y={y + 4} fontSize={11} fill='#6b7280'>
+              <line
+                x1={margin.left}
+                x2={margin.left + plotW}
+                y1={y}
+                y2={y}
+                stroke={isDark ? '#374151' : '#f3f4f6'}
+              />
+              <text x={8} y={y + 4} fontSize={11} fill={isDark ? '#d1d5db' : '#6b7280'}>
                 {t.toFixed(2)}
               </text>
             </g>
@@ -114,7 +162,7 @@ export function InteractiveChart({ series = [], width = 680, height = 300, xLabe
                       y={yToPx(p.y)}
                       width={barW}
                       height={margin.top + plotH - yToPx(p.y)}
-                      fill={s?.color ?? defaultColors[i % defaultColors.length]}
+                      fill={resolveColor(s?.color) ?? resolveColor(defaultColors[i % defaultColors.length]) ?? defaultColors[i % defaultColors.length]}
                     />
                   );
                 })}
@@ -123,7 +171,11 @@ export function InteractiveChart({ series = [], width = 680, height = 300, xLabe
               <polyline
                 key={s?.name ?? String(i)}
                 fill='none'
-                stroke={s?.color ?? defaultColors[i % defaultColors.length]}
+                stroke={
+                  resolveColor(s?.color) ??
+                  resolveColor(defaultColors[i % defaultColors.length]) ??
+                  defaultColors[i % defaultColors.length]
+                }
                 strokeWidth={2}
                 points={s.points.map((p) => `${xToPx(p.x)},${yToPx(p.y)}`).join(' ')}
               />
@@ -137,7 +189,13 @@ export function InteractiveChart({ series = [], width = 680, height = 300, xLabe
           </g>
         ) : null}
         {/* axis titles */}
-        <text x={margin.left + plotW / 2} y={height - 6} fontSize={12} textAnchor='middle' fill='#374151'>
+        <text
+          x={margin.left + plotW / 2}
+          y={height - 6}
+          fontSize={12}
+          textAnchor='middle'
+          fill={isDark ? '#d1d5db' : '#374151'}
+        >
           {xLabel}
         </text>
         <text
@@ -145,7 +203,7 @@ export function InteractiveChart({ series = [], width = 680, height = 300, xLabe
           y={margin.top + plotH / 2}
           fontSize={12}
           textAnchor='middle'
-          fill='#374151'
+          fill={isDark ? '#d1d5db' : '#374151'}
           transform={`rotate(-90 12 ${margin.top + plotH / 2})`}
         >
           {yLabel}
@@ -154,11 +212,27 @@ export function InteractiveChart({ series = [], width = 680, height = 300, xLabe
 
       {hover ? (
         <div style={{ position: 'relative', marginTop: 6 }}>
-          <div style={{ background: '#111827', color: '#fff', padding: 8, borderRadius: 6, fontSize: 12, display: 'inline-block' }}>
+          <div
+            style={{
+              background: isDark ? '#111827' : '#ffffff',
+              color: isDark ? '#fff' : '#111827',
+              padding: 8,
+              borderRadius: 6,
+              fontSize: 12,
+              display: 'inline-block',
+            }}
+          >
             <div style={{ fontWeight: 600 }}>x: {hover.x.toFixed(2)}</div>
             {hover.values.map((v) => (
               <div key={v.name} style={{ display: 'flex', gap: 8 }}>
-                <div style={{ width: 8, height: 8, background: '#fff', borderRadius: 2 }} />
+                <div
+                  style={{
+                    width: 8,
+                    height: 8,
+                    background: isDark ? '#fff' : '#000',
+                    borderRadius: 2,
+                  }}
+                />
                 <div>{v.name}: {v.y.toFixed(4)}</div>
               </div>
             ))}

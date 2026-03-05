@@ -83,3 +83,17 @@ export function computeHistogramSeries(valuesInput: string, bins = 10): { x: num
   });
   return counts.map((count, i) => ({ x: min + i * binWidth + binWidth / 2, y: count }));
 }
+
+// simple line/bar series from a single list of values, x = 1,2,...
+export function computeSeriesFromList(valuesInput: string): { x: number; y: number }[] {
+  const values = parseNumberList(valuesInput) ?? [];
+  return values.map((v, i) => ({ x: i + 1, y: v }));
+}
+
+// pair up two lists of equal length into x/y points; returns null on invalid input
+export function computeXYSeries(xInput: string, yInput: string): { x: number; y: number }[] | null {
+  const xs = parseNumberList(xInput) ?? [];
+  const ys = parseNumberList(yInput) ?? [];
+  if (xs.length === 0 || ys.length === 0 || xs.length !== ys.length) return null;
+  return xs.map((x, i) => ({ x, y: ys[i]!, }));
+}

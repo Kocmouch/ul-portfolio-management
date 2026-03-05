@@ -20,9 +20,11 @@ It bundles theory, tools, and calculators into one clean interface so students c
 - **Tools**
 
   - Miscellaneous helpers that complement the course (e.g. input helpers, small utilities).
+  - **Visualization**: interactive chart selector with several types (returns/cumulative, regression, scatter, line, bar, histogram).  Calculators can import helpers from `src/lib/chartUtils` when they need to display data-driven charts.
 
 - **Calculators**
   - Unified UI with collapsible cards, category filters and info modals (formula + explanation).
+  - A handful of tools now include viz previews – e.g. regression/correlation scatter plots, return series, and cash‑flow bars – powered by the shared `chartUtils` helpers.
   - **Return measures**
     - Holding Period Return (HPR)
     - Portfolio Expected Return (weighted average)

@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { parseNumberList } from '@/lib/calculatorUtils';
+import ChartTools from '@/components/tools/ChartTools';
 import BlockMath from '@matejmazur/react-katex';
 
 export function CorrelationCalculator() {
@@ -11,8 +12,9 @@ export function CorrelationCalculator() {
   const [yInput, setYInput] = useState('');
   const [result, setResult] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [showChart, setShowChart] = useState(false);
 
-  const handleCalculate = () => {
+  React.useEffect(() => {
     const x = parseNumberList(xInput);
     const y = parseNumberList(yInput);
     if (!x || !y) {
@@ -51,7 +53,8 @@ export function CorrelationCalculator() {
     const rho = sampleCov / (sdX * sdY);
     setError(null);
     setResult(rho.toFixed(6));
-  };
+  }, [xInput, yInput]);
+
 
   return (
     <div className='space-y-3'>
@@ -63,12 +66,20 @@ export function CorrelationCalculator() {
         <Label htmlFor='corr-y'>Series Y (same length)</Label>
         <Input id='corr-y' placeholder='e.g. 2 4 6' value={yInput} onChange={(e) => setYInput(e.target.value)} />
       </div>
-      <Button type='button' size='sm' onClick={handleCalculate}>
-        Calculate
-      </Button>
-      {error && <p className='text-sm text-destructive'>{error}</p>}
+      <div className='flex items-center gap-2'>
+        <Button type='button' size='sm' variant='outline' onClick={() => setShowChart((s) => !s)}>
+          {showChart ? 'Hide chart' : 'Show chart'}
+        </Button>
+        {error && <p className='text-sm text-destructive'>{error}</p>}
+      </div>
       {result && !error && (
         <p className='text-sm text-emerald-500'>Correlation (rho): <span className='font-semibold'>{result}</span></p>
+      )}
+
+      {showChart && (xInput.trim() || yInput.trim()) && (
+        <div className='mt-4'>
+          <ChartTools chartType='scatter' xInput={xInput} yInput={yInput} compact />
+        </div>
       )}
         <div className='pt-3 text-sm text-muted-foreground'>
           <BlockMath math={'\\rho_{X,Y} = \\frac{\\text{Cov}(X,Y)}{\\sigma_X \\sigma_Y}'} />

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import BlockMath from '@matejmazur/react-katex';
 import { ChevronDownIcon, InfoIcon } from 'lucide-react';

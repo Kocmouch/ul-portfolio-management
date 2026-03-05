@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { parseNumberList } from '@/lib/calculatorUtils';
 import BlockMath from '@matejmazur/react-katex';
 import InteractiveChart from '@/components/ui/InteractiveChart';
-import PlotlyChart from '@/components/ui/PlotlyChart';
+import ChartJSChart from '@/components/ui/ChartJSChart';
 
 export function GeometricAverageCalculator() {
   const [returnsInput, setReturnsInput] = useState('');
@@ -52,7 +52,7 @@ export function GeometricAverageCalculator() {
     ];
   }, [returnsInput]);
 
-  const [usePlotly, setUsePlotly] = useState(false);
+  const [useChartJs, setUseChartJs] = useState(false);
 
   return (
     <div className='space-y-3'>
@@ -86,13 +86,13 @@ export function GeometricAverageCalculator() {
           <div className='flex items-center justify-between'>
             <h4 className='text-sm font-semibold mb-2'>Interactive chart</h4>
             <div className='flex items-center gap-2'>
-              <label className='text-sm text-muted-foreground'>Use Plotly</label>
-              <Button size='sm' type='button' onClick={() => setUsePlotly((s) => !s)}>{usePlotly ? 'Switch to SVG' : 'Switch to Plotly'}</Button>
+              <label className='text-sm text-muted-foreground'>Use Chart.js</label>
+              <Button size='sm' type='button' onClick={() => setUseChartJs((s) => !s)}>{useChartJs ? 'Switch to SVG' : 'Switch to Chart.js'}</Button>
             </div>
           </div>
 
-          {usePlotly ? (
-            <PlotlyChart series={series} width={640} height={260} />
+          {useChartJs ? (
+            <ChartJSChart series={series} width={640} height={260} />
           ) : (
             <InteractiveChart series={series} width={640} height={260} />
           )}

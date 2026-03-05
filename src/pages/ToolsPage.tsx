@@ -6,7 +6,7 @@ export function ToolsPage() {
   return (
     <section className='flex w-full flex-col gap-6 py-4'>
       <div>
-        <Typography variant='h1'>Tools & Resources</Typography>
+        <Typography variant='h1' className='text-slate-900 dark:text-slate-50'>Tools & Resources</Typography>
         <Typography variant='body2' className='mt-2 max-w-2xl text-muted-foreground sm:text-sm md:text-base'>
           Use these structured tools during exercises, assignments, and exam preparation. You can later replace the placeholders
           with course-specific links and documents.
@@ -16,13 +16,13 @@ export function ToolsPage() {
       <div className='grid gap-4 md:grid-cols-2'>
         <Card className='border-border bg-card'>
           <CardHeader>
-            <CardTitle className='text-lg text-slate-50'>Portfolio Construction Checklist</CardTitle>
+            <CardTitle className='text-lg text-slate-900 dark:text-slate-50'>Portfolio Construction Checklist</CardTitle>
             <CardDescription>
               Step-by-step guide to define objectives, constraints, and build an investable universe.
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <ol className='list-decimal space-y-1 pl-5 text-sm text-slate-200'>
+            <ol className='list-decimal space-y-1 pl-5 text-sm text-slate-800 dark:text-slate-200'>
               <li>Define investment horizon and risk tolerance.</li>
               <li>Specify constraints (liquidity, asset classes, ESG, etc.).</li>
               <li>Select the investable universe and data sources.</li>
@@ -34,11 +34,11 @@ export function ToolsPage() {
 
         <Card className='border-border bg-card'>
           <CardHeader>
-            <CardTitle className='text-lg text-slate-50'>Data & Templates</CardTitle>
+            <CardTitle className='text-lg text-slate-900 dark:text-slate-50'>Data & Templates</CardTitle>
             <CardDescription>Placeholders for course data sets and spreadsheet templates.</CardDescription>
           </CardHeader>
           <CardContent>
-            <ul className='list-disc space-y-1 pl-5 text-sm text-slate-200'>
+            <ul className='list-disc space-y-1 pl-5 text-sm text-slate-800 dark:text-slate-200'>
               <li>Daily returns CSV template for multiple assets.</li>
               <li>Excel/Sheets template for mean–variance calculations.</li>
               <li>Instructions for importing data from external sources.</li>
@@ -48,11 +48,11 @@ export function ToolsPage() {
 
         <Card className='border-border bg-card md:col-span-2'>
           <CardHeader>
-            <CardTitle className='text-lg text-slate-50'>External Platforms</CardTitle>
+            <CardTitle className='text-lg text-slate-900 dark:text-slate-50'>External Platforms</CardTitle>
             <CardDescription>Links to any platforms, sandboxes, or terminals used in the course.</CardDescription>
           </CardHeader>
           <CardContent>
-            <ul className='list-disc space-y-1 pl-5 text-sm text-slate-200'>
+            <ul className='list-disc space-y-1 pl-5 text-sm text-slate-800 dark:text-slate-200'>
               <li>Insert Bloomberg / Refinitiv / Quandl or other data providers here.</li>
               <li>Links to online backtesting or portfolio analytics tools.</li>
               <li>Guidelines for responsible and reproducible use of data.</li>
@@ -62,8 +62,8 @@ export function ToolsPage() {
 
         <Card className='border-border bg-card md:col-span-2'>
           <CardHeader>
-            <CardTitle className='text-lg text-slate-50'>Visualization Tools</CardTitle>
-            <CardDescription>Interactive chart selector – pick a type (returns, regression, histogram), enter data, toggle between SVG/Plotly.</CardDescription>
+            <CardTitle className='text-lg text-slate-900 dark:text-slate-50'>Visualization Tools</CardTitle>
+            <CardDescription>Interactive chart selector – pick a type (returns, regression, scatter, line, bar, histogram), enter data, toggle between SVG/Chart.js.</CardDescription>
           </CardHeader>
           <CardContent>
             <ChartTools />

@@ -1,18 +1,20 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import BlockMath from '@matejmazur/react-katex';
 import { parseNumberList } from '@/lib/calculatorUtils';
+import ChartTools from '@/components/tools/ChartTools';
 
 export function RegressionCalculator() {
   const [xInput, setXInput] = useState('');
   const [yInput, setYInput] = useState('');
   const [result, setResult] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [showChart, setShowChart] = useState(false);
 
-  const handleCalculate = () => {
+  React.useEffect(() => {
     const x = parseNumberList(xInput);
     const y = parseNumberList(yInput);
     if (!x || !y) {
@@ -44,7 +46,8 @@ export function RegressionCalculator() {
     const intercept = meanY - slope * meanX;
     setError(null);
     setResult(`slope = ${slope.toFixed(6)}, intercept = ${intercept.toFixed(6)}`);
-  };
+  }, [xInput, yInput]);
+
 
   return (
     <div className='space-y-3'>
@@ -56,12 +59,20 @@ export function RegressionCalculator() {
         <Label htmlFor='reg-y'>Dependent Y (same length)</Label>
         <Input id='reg-y' placeholder='e.g. 2 4 6' value={yInput} onChange={(e) => setYInput(e.target.value)} />
       </div>
-      <Button type='button' size='sm' onClick={handleCalculate}>
-        Calculate
-      </Button>
-      {error && <p className='text-sm text-destructive'>{error}</p>}
+      <div className='flex items-center gap-2'>
+        <Button type='button' size='sm' variant='outline' onClick={() => setShowChart((s) => !s)}>
+          {showChart ? 'Hide chart' : 'Show chart'}
+        </Button>
+        {error && <p className='text-sm text-destructive'>{error}</p>}
+      </div>
       {result && !error && (
         <p className='text-sm text-emerald-500'><span className='font-semibold'>{result}</span></p>
+      )}
+
+      {showChart && (xInput.trim() || yInput.trim()) && (
+        <div className='mt-4'>
+          <ChartTools chartType='regression' xInput={xInput} yInput={yInput} compact />
+        </div>
       )}
       <div className='pt-3 text-sm text-muted-foreground'>
         <BlockMath math={'Y_i = a + b X_i + \\varepsilon_i'} />

@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import BlockMath from '@matejmazur/react-katex';
 import { parseNumberList } from '@/lib/calculatorUtils';
+import ChartTools from '@/components/tools/ChartTools';
 
 function computeIRR(cashFlows: number[], guess = 0.1): number | null {
   const maxIter = 1000;
@@ -46,8 +47,9 @@ export function MWRCalculator() {
   const [cashFlowsInput, setCashFlowsInput] = useState('');
   const [result, setResult] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [showChart, setShowChart] = useState(false);
 
-  const handleCalculate = () => {
+  useEffect(() => {
     const cashFlows = parseNumberList(cashFlowsInput);
     if (!cashFlows) {
       setError('Please enter numeric values for all cash flows.');
@@ -72,7 +74,8 @@ export function MWRCalculator() {
 
     setError(null);
     setResult(`${(irr * 100).toFixed(2)}%`);
-  };
+  }, [cashFlowsInput]);
+
 
   return (
     <div className='space-y-3'>
@@ -85,14 +88,22 @@ export function MWRCalculator() {
           onChange={(event) => setCashFlowsInput(event.target.value)}
         />
       </div>
-      <Button type='button' size='sm' onClick={handleCalculate}>
-        Calculate
-      </Button>
-      {error && <p className='text-sm text-destructive'>{error}</p>}
+      <div className='flex items-center gap-2'>
+        <Button type='button' size='sm' variant='outline' onClick={() => setShowChart((s) => !s)}>
+          {showChart ? 'Hide chart' : 'Show chart'}
+        </Button>
+        {error && <p className='text-sm text-destructive'>{error}</p>}
+      </div>
       {result && !error && (
         <p className='text-sm text-emerald-500'>
           Money-weighted return (IRR): <span className='font-semibold'>{result}</span>
         </p>
+      )}
+
+      {showChart && cashFlowsInput.trim() && (
+        <div className='mt-4'>
+          <ChartTools chartType='bar' simpleInput={cashFlowsInput} compact />
+        </div>
       )}
       <div className='pt-3 text-sm text-muted-foreground'>
         <BlockMath math={'\\sum_{t=0}^T \\frac{CF_t}{(1+IRR)^t} = 0'} />
