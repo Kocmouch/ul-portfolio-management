@@ -7,11 +7,12 @@ export const lecture03CapmAndAptMarkdown = String.raw`### Detailed Notes: Lectur
 Simple Economy Setup:
 - Imagine an economy with one riskless asset and two risky assets.
 - Investors allocate their funds between these assets to maximize returns while managing risk.
-- The Capital Allocation Line (CAL) represents the risk-return tradeoff for portfolios combining the risk-free asset and risky assets.
+- The Capital Allocation Line (CAL) represents the risk–return tradeoff for portfolios combining the risk‑free asset and risky assets (a linear locus in $
+ho$–$E$ space).
 
 Equilibrium:
 - In equilibrium, supply equals demand for shares.
-- Example: If a company issues 10,000 shares at a price of $36.5, investors will demand exactly 10,000 shares at that price.
+- Example: If a company issues $10{,}000$ shares at a price of $36.5$, investors will demand exactly $10{,}000$ shares at that price.
 
 ---
 
@@ -36,19 +37,24 @@ The "M" Portfolio:
 - It includes all risky assets, weighted by their market capitalizations.
 - Investors combine Portfolio M with the risk-free asset to achieve their desired risk-return profile along the Capital Market Line (CML).
 
-Simplified Derivation of CAPM:
-- Since company-specific risk can be diversified away, investors are compensated only for systematic risk.
-- The risk premium of an asset is proportional to its beta:
-	$$ E(R_i) = R_f + \beta_i [E(R_M) - R_f] $$
-	Where:
-	- $E(R_i)$: Expected return of asset $i$.
-	- $R_f$: Risk-free rate.
-	- $\beta_i$: Asset’s sensitivity to market risk.
-	- $E(R_M)$: Expected return of the market.
+**Simplified Derivation of CAPM:**
+- Since company‑specific (idiosyncratic) risk can be diversified away, only systematic risk earns a premium.
+- The relationship between expected return and beta is linear:
 
-Security Market Line (SML):
-- The SML plots the relationship between an asset's beta and its expected return.
-- The slope of the SML is the market risk premium: $E(R_M)-R_f$.
+	$$
+	E(R_i) = R_f + \beta_i\bigl[E(R_M) - R_f\bigr]
+	$$
+
+	This equation states that the expected return on asset $i$ equals the risk‑free rate plus the asset’s beta times the market risk premium ($E(R_M)-R_f$).
+	Where:
+	- $E(R_i)$: expected return of asset $i$.
+	- $R_f$: risk‑free rate.
+	- $\beta_i$: asset’s sensitivity to market (systematic) risk.
+	- $E(R_M)$: expected return of the market portfolio.
+
+**Security Market Line (SML):**
+- The SML plots each asset’s expected return against its beta; it is the graphical representation of the CAPM equation above.
+- The slope of the SML is the market risk premium, $E(R_M)-R_f$, showing how much additional return per unit of beta investors require.
 
 ---
 
@@ -66,9 +72,13 @@ Identifying Mispriced Shares:
 
 Measuring Portfolio Performance:
 - CAPM provides a benchmark for evaluating fund managers.
-- Example: If a fund has a beta of 1.7, $R_f=8\%$, and market risk premium = $9\%$, the expected return is:
-	$$ E(R_j) = 8\% + 1.7 \times 9\% = 23.3\% $$
-	If the fund achieves a return higher than 23.3\%, the manager has added value.
+- Example: If a fund has $\beta=1.7$, $R_f=8\%$, and market risk premium $=9\%$, the expected return is:
+
+	$$
+	E(R_j) = 8\% + 1.7 \times 9\% = 23.3\%
+	$$
+
+	Achieving a return above 23.3\% would indicate the manager added alpha.
 
 Calculating the Required Rate of Return for Projects:
 - CAPM can be used to determine the discount rate for evaluating investment projects.
@@ -123,8 +133,12 @@ APT vs. CAPM:
 - APT allows for multiple factors affecting returns, whereas CAPM uses a single factor (market risk).
 
 Multifactor Models:
-- APT generalizes to include multiple factors (e.g., GDP growth, inflation, interest rates).
-- Example: Expected return = Risk-free rate + Risk premiums for each factor.
+- APT generalizes to include multiple risk factors (e.g., GDP growth, inflation, interest rates).
+	- In an $m$‑factor APT model the expected return has the form
+		$$
+		E(R_i) = R_f + \sum_{k=1}^m \beta_{ik} \lambda_k
+		$$
+		where $\beta_{ik}$ is asset $i$’s sensitivity to factor $k$ and $\lambda_k$ the corresponding factor risk premium.
 
 ---
 

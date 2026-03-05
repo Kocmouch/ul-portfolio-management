@@ -9,23 +9,39 @@ export const lecture01RiskAndReturnMarkdown = String.raw`### Student Notes: Lect
 ---
 
 #### **Rates of Return**
-- **Holding-Period Return (HPR):**
+- **Holding-Period Return ($HPR$):**
 	- Measures how much an investment grows over a specific period.
-	- Formula:  
-		$$HPR = \frac{\text{Ending Price - Beginning Price + Dividend}}{\text{Beginning Price}}$$
-	- Example: If you buy a stock for $100, it grows to $110, and you receive a $5 dividend, the HPR is:  
-		$$HPR = \frac{110 - 100 + 5}{100} = 15\%$$
-	- **Key takeaway:** HPR combines dividend yield and capital gains yield.
+	- **Formula:**
+
+		$$
+		HPR = \frac{\text{Ending Price} - \text{Beginning Price} + \text{Dividend}}{\text{Beginning Price}}
+		$$
+
+		This ratio expresses the total return (capital gain plus dividend) relative to the initial price.
+	- Example: If you buy a stock for $100$, it grows to $110$, and you receive a $5$ dividend, the $HPR$ is:
+
+		$$
+		HPR = \frac{110 - 100 + 5}{100} = 15\%
+		$$
+	- **Key takeaway:** $HPR$ combines dividend yield and capital gains yield.
 
 ---
 
 #### **Returns Over Multiple Periods**
 - **Arithmetic Average:**
 	- Simple average of returns over multiple periods.
-	- Formula:  
-		$$\text{Arithmetic Average} = \frac{\text{Sum of Returns}}{\text{Number of Periods}}$$
-	- Example: Returns over 4 years: 20%, 5%, 10%, 15%.  
-		$$\text{Arithmetic Average} = \frac{20 + 5 + 10 + 15}{4} = 10\%$$
+	- **Formula:**
+
+		$$
+		\text{Arithmetic Average} = \frac{\text{Sum of Returns}}{\text{Number of Periods}}
+		$$
+
+		This computes the unweighted mean of periodic returns.
+	- Example: Returns over 4 years: $20\%,\,5\%,\,10\%,\,15\%$.  
+
+		$$
+		\text{Arithmetic Average} = \frac{20 + 5 + 10 + 15}{4} = 10\%
+		$$
 	- **Key points:**
 		- Ignores compounding.
 		- Useful for forecasting future returns.
@@ -33,10 +49,18 @@ export const lecture01RiskAndReturnMarkdown = String.raw`### Student Notes: Lect
 
 - **Geometric Average:**
 	- Accounts for compounding and gives the true average growth rate.
-	- Formula:  
-		$$r_g = \left[\prod (1 + r_i)\right]^{1/n} - 1$$
-	- Example: Using the same returns:  
-		$$r_g = [(1+0.2) \times (1+0.05) \times (1+0.1) \times (1+0.15)]^{1/4} - 1 = 9.58\%$$
+	- **Formula:**
+
+		$$
+		r_g = \left[\prod_{i=1}^{n} (1 + r_i)\right]^{1/n} - 1
+		$$
+
+		Here $r_i$ denotes the return in period $i$ and $n$ is the number of periods.
+	- Example: Using the same returns:
+
+		$$
+		r_g = [(1+0.2) \times (1+0.05) \times (1+0.1) \times (1+0.15)]^{1/4} - 1 = 9.58\%
+		$$
 	- **Key points:**
 		- Smaller than arithmetic average.
 		- Known as the *time-weighted average return*.
@@ -50,31 +74,51 @@ export const lecture01RiskAndReturnMarkdown = String.raw`### Student Notes: Lect
 #### **Compounding and Effective Annual Rate (EAR)**
 - **Compounding:** The process of earning interest on both the principal and previously earned interest.
 - **Effective Annual Rate (EAR):**
-	- Formula:  
-		$$r_{eff} = \left(1 + \frac{APR}{n}\right)^n - 1$$
-	- Example: APR = 6%, compounded semiannually:  
-		$$r_{eff} = (1 + 0.03)^2 - 1 = 6.09\%$$
-	- **Key takeaway:** As compounding frequency increases, EAR approaches the continuous compounding rate.
+	- Formula:
+
+		$$
+		r_{eff} = \left(1 + \frac{APR}{n}\right)^n - 1
+		$$
+
+		The formula converts a stated annual percentage rate ($APR$) with $n$ compounding periods to an effective annual yield.
+	- Example: $APR = 6\%$, compounded semiannually ($n=2$):
+
+		$$
+		r_{eff} = (1 + 0.03)^2 - 1 = 6.09\%
+		$$
+	- **Key takeaway:** As compounding frequency increases, $EAR$ approaches the continuous compounding rate.
 
 ---
 
 #### **Scenario Analysis: Expected Value**
-- **Expected Return (E(r)):**
+- **Expected Return ($E(r)$):**
 	- Weighted average of possible returns based on probabilities.
-	- Formula:  
-		$$E(r) = \sum p(s)r(s)$$
-	- Example:  
+	- **Formula:**
+
+		$$
+		 E(r) = \sum_{s} p(s) \, r(s)
+		$$
+
+		Here $p(s)$ is the probability of state $s$ and $r(s)$ the return in that state.
+	- Example:
+
 		| State of Economy | Probability | Return |
 		|------------------|-------------|--------|
-		| Boom             | 0.25        | 30%    |
-		| Normal Growth    | 0.50        | 10%    |
-		| Recession        | 0.25        | -10%   |
-		$$E(r) = (0.25 \cdot 30\%) + (0.5 \cdot 10\%) + (0.25 \cdot -10\%) = 10\%$$
+		| Boom             | 0.25        | 30\%   |
+		| Normal Growth    | 0.50        | 10\%   |
+		| Recession        | 0.25        | -10\%  |
+		
+		$$
+		 E(r) = (0.25 \cdot 30\%) + (0.5 \cdot 10\%) + (0.25 \cdot -10\%) = 10\%
+		$$
 
 - **Variance and Standard Deviation:**
-	- Variance measures the spread of returns around the expected return.  
-		$$\sigma^2 = \sum p(s)[r(s) - E(r)]^2$$
-	- Standard deviation is the square root of variance, providing a measure of risk in percentage terms.
+	- Variance measures the spread of returns around the expected return.
+		$$
+		\sigma^2 = \sum_{s} p(s) [r(s) - E(r)]^2
+		$$
+		This gives the probability-weighted average squared deviation from the mean.
+	- Standard deviation ($\sigma$) is the square root of variance, providing a measure of risk in percentage terms.
 
 ---
 
@@ -90,10 +134,10 @@ export const lecture01RiskAndReturnMarkdown = String.raw`### Student Notes: Lect
 #### **Risk Aversion**
 - **Risk Premium:** The extra return investors demand for taking on risk.
 - **Utility Function:**  
-	$$U = E(r) - \frac{1}{2}A\sigma^2$$  
-	- A = risk aversion coefficient.
-	- Higher A → more risk-averse investor.
-
+		$$
+		 U = E(r) - \frac{1}{2} A \sigma^2
+		$$
+		where $A$ is the risk aversion coefficient. A larger $A$ corresponds to a more risk-averse investor.
 - **Example Portfolios:**
 	| Portfolio | Expected Return | Risk (SD) |
 	|-----------|-----------------|-----------|
@@ -106,13 +150,29 @@ export const lecture01RiskAndReturnMarkdown = String.raw`### Student Notes: Lect
 #### **Capital Allocation Line (CAL)**
 - **Mixing Risk-Free and Risky Assets:**
 	- Investors can combine a risk-free asset (e.g., T-bills) with a risky portfolio to achieve their desired risk-return tradeoff.
-	- Formula for expected return:  
-		$$E(r) = y \cdot E(r_p) + (1-y)r_f$$
-	- Formula for standard deviation:  
-		$$\sigma = y \cdot \sigma_p$$
-	- Example: If 50% is invested in a risky portfolio (E(rₚ) = 15%, σₚ = 22%) and 50% in T-bills (r_f = 7%), the portfolio’s return and risk are:  
-		$$E(r) = 0.5(15\%) + 0.5(7\%) = 11\%$$  
-		$$\sigma = 0.5(22\%) = 11\%$$
+		- **Formula for expected return:**
+
+			$$
+		 E(r) = y \, E(r_p) + (1-y) r_f
+		$$
+
+			where $y$ is the fraction invested in the risky portfolio, $r_f$ the risk-free rate.
+		- **Formula for standard deviation:**
+
+			$$
+		 \sigma = y \, \sigma_p
+		$$
+
+			since the risk-free asset has zero volatility.
+		- Example: If 50% is invested in a risky portfolio ($E(r_p) = 15\%$, $\sigma_p = 22\%$) and 50% in T-bills ($r_f = 7\%$), the portfolio’s return and risk are:
+
+			$$
+		 E(r) = 0.5(15\%) + 0.5(7\%) = 11\%
+		$$
+
+			$$
+		 \sigma = 0.5(22\%) = 11\%
+		$$
 
 - **Passive Investing:**  
 	- A strategy where investors replicate a market index (e.g., S&P 500) instead of actively picking stocks.
