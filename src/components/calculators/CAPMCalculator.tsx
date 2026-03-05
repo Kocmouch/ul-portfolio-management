@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import BlockMath from '@matejmazur/react-katex';
 
 export function CAPMCalculator() {
   const [riskFreeRate, setRiskFreeRate] = useState('');
@@ -68,6 +69,15 @@ export function CAPMCalculator() {
           </p>
         </div>
       )}
+      <div className='pt-3 text-sm text-muted-foreground'>
+        <BlockMath math={'E(R_i) = R_f + \\beta_i [E(R_M) - R_f]'} />
+        <div className='mt-1'>
+          <p className='font-semibold'>Parameters:</p>
+          <p>- R_f: risk-free rate (decimal)</p>
+          <p>- β_i: asset beta (sensitivity to market)</p>
+          <p>- E(R_M): expected market return (decimal)</p>
+        </div>
+      </div>
     </div>
   );
 }

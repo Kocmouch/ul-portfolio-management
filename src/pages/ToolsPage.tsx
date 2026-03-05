@@ -1,5 +1,6 @@
 import { Typography } from '@/components/Typography';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import ChartTools from '@/components/tools/ChartTools';
 
 export function ToolsPage() {
   return (
@@ -56,6 +57,16 @@ export function ToolsPage() {
               <li>Links to online backtesting or portfolio analytics tools.</li>
               <li>Guidelines for responsible and reproducible use of data.</li>
             </ul>
+          </CardContent>
+        </Card>
+
+        <Card className='border-border bg-card md:col-span-2'>
+          <CardHeader>
+            <CardTitle className='text-lg text-slate-50'>Visualization Tools</CardTitle>
+            <CardDescription>Interactive chart selector – pick a type (returns, regression, histogram), enter data, toggle between SVG/Plotly.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ChartTools />
           </CardContent>
         </Card>
       </div>

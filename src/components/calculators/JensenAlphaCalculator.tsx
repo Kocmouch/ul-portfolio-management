@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import BlockMath from '@matejmazur/react-katex';
 
 export function JensenAlphaCalculator() {
   const [portfolioReturn, setPortfolioReturn] = useState('');
@@ -80,6 +81,16 @@ export function JensenAlphaCalculator() {
           </p>
         </div>
       )}
+        <div className='pt-3 text-sm text-muted-foreground'>
+          <BlockMath math={'\\alpha_J = E(R_p) - [R_f + \\beta_p (E(R_M) - R_f)]'} />
+          <div className='mt-1'>
+            <p className='font-semibold'>Parameters:</p>
+            <p>- E(R_p): portfolio expected return (decimal)</p>
+            <p>- R_f: risk-free rate (decimal)</p>
+            <p>- β_p: portfolio beta</p>
+            <p>- E(R_M): expected market return (decimal)</p>
+          </div>
+        </div>
     </div>
   );
 }

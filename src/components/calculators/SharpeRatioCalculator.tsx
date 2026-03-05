@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import BlockMath from '@matejmazur/react-katex';
 
 export function SharpeRatioCalculator() {
   const [portfolioReturn, setPortfolioReturn] = useState('');
@@ -66,6 +67,15 @@ export function SharpeRatioCalculator() {
           Sharpe ratio: <span className='font-semibold'>{result}</span>
         </p>
       )}
+      <div className='pt-3 text-sm text-muted-foreground'>
+        <BlockMath math={'\\text{Sharpe} = \\frac{E(R_p) - R_f}{\\sigma_p}'} />
+        <div className='mt-1'>
+          <p className='font-semibold'>Parameters:</p>
+          <p>- E(R_p): portfolio expected return (decimal)</p>
+          <p>- R_f: risk-free rate (decimal)</p>
+          <p>- σ_p: portfolio volatility (standard deviation)</p>
+        </div>
+      </div>
     </div>
   );
 }

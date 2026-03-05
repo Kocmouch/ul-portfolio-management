@@ -12,6 +12,9 @@ It bundles theory, tools, and calculators into one clean interface so students c
 - **Docs**
 
   - Short, focused explanations of key concepts from portfolio theory and performance measurement.
+  - Split into:
+    - **Notes** (lecture-aligned, e.g. _Lecture 1 Notes: Risk and Return_)
+    - **Book chapters** (chapter/problem-set oriented summaries, currently covering _Chapter 5_ and _Chapter 6_)
   - Written to match the structure of a PM course (returns, risk, diversification, CAPM, performance attribution, etc.).
 
 - **Tools**

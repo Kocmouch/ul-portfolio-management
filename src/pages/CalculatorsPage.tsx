@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Typography } from '@/components/Typography';
 import { CalculatorCard } from '@/components/calculators/CalculatorCard';
 import { calculatorsConfig, type CalculatorCategory } from '@/components/calculators/config';
+import { lectureAccents } from '@/configs/lectureConfig';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
@@ -17,6 +18,7 @@ const CATEGORY_FILTERS: { id: 'all' | CalculatorCategory; label: string }[] = [
 export function CalculatorsPage() {
   const [filter, setFilter] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<'all' | CalculatorCategory>('all');
+  const [lectureFilter, setLectureFilter] = useState<'all' | string>('all');
 
   // Persist last visited route in the URL hash (simple client-side routing support).
   useEffect(() => {
@@ -31,20 +33,34 @@ export function CalculatorsPage() {
   const filteredCalculators = useMemo(() => {
     const query = filter.trim().toLowerCase();
 
-    const byCategory = calculatorsConfig.filter((calculator) =>
-      categoryFilter === 'all' ? true : calculator.category === categoryFilter
-    );
-
-    if (!query) return byCategory;
-
-    return byCategory.filter((calculator) => {
-      const haystack = [calculator.title, calculator.subtitle ?? '', calculator.category, calculator.description]
-        .join(' ')
-        .toLowerCase();
-
-      return haystack.includes(query);
+    // Filter by category and lecture first
+    const byCategoryAndLecture = calculatorsConfig.filter((calculator) => {
+      const categoryOk = categoryFilter === 'all' ? true : calculator.category === categoryFilter;
+      const lectureOk = lectureFilter === 'all' ? true : calculator.lecture === lectureFilter;
+      return categoryOk && lectureOk;
     });
-  }, [filter, categoryFilter]);
+
+    const matched = query
+      ? byCategoryAndLecture.filter((calculator) => {
+          const haystack = [calculator.title, calculator.subtitle ?? '', calculator.category, calculator.description]
+            .join(' ')
+            .toLowerCase();
+
+          return haystack.includes(query);
+        })
+      : byCategoryAndLecture;
+
+    // Sort by category (using CATEGORY_FILTERS order) then title A-Z
+    const categoryOrder = ['return', 'risk', 'performance', 'optimization'];
+    matched.sort((a, b) => {
+      const ca = categoryOrder.indexOf(a.category);
+      const cb = categoryOrder.indexOf(b.category);
+      if (ca !== cb) return ca - cb;
+      return a.title.localeCompare(b.title);
+    });
+
+    return matched;
+  }, [filter, categoryFilter, lectureFilter]);
 
   const leftColumn: typeof filteredCalculators = [];
   const rightColumn: typeof filteredCalculators = [];
@@ -89,6 +105,28 @@ export function CalculatorsPage() {
             ))}
           </div>
         </div>
+        <div className='flex flex-wrap gap-2'>
+          <Button
+            key='all-lessons'
+            type='button'
+            size='sm'
+            variant={lectureFilter === 'all' ? 'secondary' : 'outline'}
+            onClick={() => setLectureFilter('all')}
+          >
+            All lessons
+          </Button>
+          {Object.entries(lectureAccents).map(([id, info]) => (
+            <Button
+              key={id}
+              type='button'
+              size='sm'
+              variant={lectureFilter === id ? 'secondary' : 'outline'}
+              onClick={() => setLectureFilter(id)}
+            >
+              {info.label}
+            </Button>
+          ))}
+          </div>
       </div>
 
       <div className='flex flex-col gap-4 md:flex-row md:items-start'>

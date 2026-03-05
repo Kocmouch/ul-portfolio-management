@@ -9,9 +9,11 @@ interface ModalProps {
   title?: React.ReactNode;
   description?: React.ReactNode;
   children?: React.ReactNode;
+  /** Optional className override for the modal content container (the white card). */
+  contentClassName?: string;
 }
 
-export function Modal({ open, onOpenChange, title, description, children }: ModalProps) {
+export function Modal({ open, onOpenChange, title, description, children, contentClassName }: ModalProps) {
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
@@ -34,6 +36,7 @@ export function Modal({ open, onOpenChange, title, description, children }: Moda
       <div
         className={cn(
           "relative z-10 max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-xl border bg-card p-6 shadow-lg",
+          contentClassName,
         )}
         onClick={(event) => event.stopPropagation()}
       >

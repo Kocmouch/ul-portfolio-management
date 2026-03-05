@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import BlockMath from '@matejmazur/react-katex';
 import { parseNumberList } from '@/lib/calculatorUtils';
 
 export function PortfolioWeightsCalculator() {
@@ -56,6 +57,14 @@ export function PortfolioWeightsCalculator() {
           ))}
         </ul>
       )}
+      <div className='pt-3 text-sm text-muted-foreground'>
+        <BlockMath math={'w_i = \\frac{V_i}{\\sum_{j} V_j'} />
+        <div className='mt-1'>
+          <p className='font-semibold'>Parameters:</p>
+          <p>- V_i: value of asset i</p>
+          <p>- Sum: total portfolio value across assets</p>
+        </div>
+      </div>
     </div>
   );
 }

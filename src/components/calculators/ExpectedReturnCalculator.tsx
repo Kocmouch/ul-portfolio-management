@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { parseNumberList } from '@/lib/calculatorUtils';
+import BlockMath from '@matejmazur/react-katex';
 
 export function ExpectedReturnCalculator() {
   const [weightsInput, setWeightsInput] = useState('');
@@ -68,6 +69,14 @@ export function ExpectedReturnCalculator() {
           Portfolio expected return: <span className='font-semibold'>{result}</span>
         </p>
       )}
+        <div className='pt-3 text-sm text-muted-foreground'>
+          <BlockMath math={'E(r) = \\sum_s p(s) r(s)'} />
+          <div className='mt-1'>
+            <p className='font-semibold'>Parameters:</p>
+            <p>- p(s): probability of state s</p>
+            <p>- r(s): return in state s (decimal)</p>
+          </div>
+        </div>
     </div>
   );
 }

@@ -6,38 +6,33 @@ import { Label } from '@/components/ui/label';
 import BlockMath from '@matejmazur/react-katex';
 import { parseNumberList } from '@/lib/calculatorUtils';
 
-export function TWRCalculator() {
+export function ArithmeticAverageCalculator() {
   const [returnsInput, setReturnsInput] = useState('');
   const [result, setResult] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleCalculate = () => {
     const returns = parseNumberList(returnsInput);
-    if (!returns) {
-      setError('Please enter numeric values for all subperiod returns.');
+    if (!returns || returns.length === 0) {
+      setError('Please enter numeric return values.');
       setResult(null);
       return;
     }
 
-    let product = 1;
-    for (const r of returns) {
-      product *= 1 + r;
-    }
-
-    const twr = product - 1;
+    const avg = returns.reduce((a, b) => a + b, 0) / returns.length;
     setError(null);
-    setResult(`${(twr * 100).toFixed(2)}%`);
+    setResult(`${(avg * 100).toFixed(2)}%`);
   };
 
   return (
     <div className='space-y-3'>
       <div className='space-y-1'>
-        <Label htmlFor='twr-returns'>Subperiod returns R_t</Label>
+        <Label htmlFor='arith-returns'>Periodic returns (space or comma separated)</Label>
         <Input
-          id='twr-returns'
-          placeholder='e.g. 0.02 -0.01 0.015'
+          id='arith-returns'
+          placeholder='e.g. 0.2 0.05 0.1 0.15'
           value={returnsInput}
-          onChange={(event) => setReturnsInput(event.target.value)}
+          onChange={(e) => setReturnsInput(e.target.value)}
         />
       </div>
       <Button type='button' size='sm' onClick={handleCalculate}>
@@ -45,16 +40,14 @@ export function TWRCalculator() {
       </Button>
       {error && <p className='text-sm text-destructive'>{error}</p>}
       {result && !error && (
-        <p className='text-sm text-emerald-500'>
-          Time-weighted return: <span className='font-semibold'>{result}</span>
-        </p>
+        <p className='text-sm text-emerald-500'>Arithmetic average: <span className='font-semibold'>{result}</span></p>
       )}
       <div className='pt-3 text-sm text-muted-foreground'>
-        <BlockMath math={'r_{TWR} = \\prod_{t=1}^T (1 + r_t) - 1'} />
+        <BlockMath math={'\\text{Arithmetic Average} = \\frac{1}{n} \\sum_{i=1}^n r_i'} />
         <div className='mt-1'>
           <p className='font-semibold'>Parameters:</p>
-          <p>- r_t: subperiod return (decimal)</p>
-          <p>- T: number of subperiods</p>
+          <p>- r_i: periodic returns (decimal)</p>
+          <p>- n: number of periods</p>
         </div>
       </div>
     </div>

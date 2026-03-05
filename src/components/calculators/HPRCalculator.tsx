@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import BlockMath from '@matejmazur/react-katex';
 
 export function HPRCalculator() {
   const [initial, setInitial] = useState('');
@@ -64,6 +65,7 @@ export function HPRCalculator() {
       <Button type='button' size='sm' onClick={handleCalculate}>
         Calculate
       </Button>
+      
       {error && <p className='text-sm text-destructive'>{error}</p>}
       {!error && resultDecimal && resultPercent && (
         <div className='space-y-1 text-sm text-emerald-500'>
@@ -75,6 +77,15 @@ export function HPRCalculator() {
           </p>
         </div>
       )}
+      <div className='pt-3 text-sm text-muted-foreground'>
+        <BlockMath math={'HPR = \\frac{V_{end} - V_{begin} + D}{V_{begin}}'} />
+        <div className='mt-1'>
+          <p className='font-semibold'>Parameters:</p>
+          <p>- V_begin: initial value / purchase price</p>
+          <p>- V_end: ending value / sale price</p>
+          <p>- D: dividends or cash flows received during the period</p>
+        </div>
+      </div>
     </div>
   );
 }

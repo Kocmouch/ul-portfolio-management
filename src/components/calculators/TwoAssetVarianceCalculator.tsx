@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import BlockMath from '@matejmazur/react-katex';
 
 export function TwoAssetVarianceCalculator() {
   const [w1, setW1] = useState('');
@@ -91,6 +92,15 @@ export function TwoAssetVarianceCalculator() {
           </p>
         </div>
       )}
+      <div className='pt-3 text-sm text-muted-foreground'>
+        <BlockMath math={'\\sigma_p^2 = w_1^2 \\sigma_1^2 + w_2^2 \\sigma_2^2 + 2 w_1 w_2 \\rho_{12} \\sigma_1 \\sigma_2'} />
+        <div className='mt-1'>
+          <p className='font-semibold'>Parameters:</p>
+          <p>- w_i: weight of asset i in the portfolio (decimal)</p>
+          <p>- σ_i: volatility (standard deviation) of asset i</p>
+          <p>- ρ_12: correlation between asset returns</p>
+        </div>
+      </div>
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import BlockMath from '@matejmazur/react-katex';
 
 export function TreynorCalculator() {
   const [portfolioReturn, setPortfolioReturn] = useState('');
@@ -66,6 +67,15 @@ export function TreynorCalculator() {
           Treynor ratio: <span className='font-semibold'>{result}</span>
         </p>
       )}
+      <div className='pt-3 text-sm text-muted-foreground'>
+        <BlockMath math={'\\text{Treynor} = \\frac{E(R_p) - R_f}{\\beta_p}'} />
+        <div className='mt-1'>
+          <p className='font-semibold'>Parameters:</p>
+          <p>- E(R_p): portfolio expected return (decimal)</p>
+          <p>- R_f: risk-free rate (decimal)</p>
+          <p>- β_p: portfolio beta (systematic risk)</p>
+        </div>
+      </div>
     </div>
   );
 }

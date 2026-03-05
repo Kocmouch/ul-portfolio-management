@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import BlockMath from '@matejmazur/react-katex';
 import { parseNumberList } from '@/lib/calculatorUtils';
 
 function computeIRR(cashFlows: number[], guess = 0.1): number | null {
@@ -93,6 +94,14 @@ export function MWRCalculator() {
           Money-weighted return (IRR): <span className='font-semibold'>{result}</span>
         </p>
       )}
+      <div className='pt-3 text-sm text-muted-foreground'>
+        <BlockMath math={'\\sum_{t=0}^T \\frac{CF_t}{(1+IRR)^t} = 0'} />
+        <div className='mt-1'>
+          <p className='font-semibold'>Parameters:</p>
+          <p>- CF_t: cash flow at time t (negative for outflow)</p>
+          <p>- IRR: internal rate of return (money-weighted return)</p>
+        </div>
+      </div>
     </div>
   );
 }

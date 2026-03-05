@@ -16,6 +16,17 @@ import { SharpeRatioCalculator } from './SharpeRatioCalculator';
 import { TreynorCalculator } from './TreynorCalculator';
 import { TWRCalculator } from './TWRCalculator';
 import { TwoAssetVarianceCalculator } from './TwoAssetVarianceCalculator';
+import { CovarianceCalculator } from './CovarianceCalculator';
+import { CorrelationCalculator } from './CorrelationCalculator';
+import { RegressionCalculator } from './RegressionCalculator';
+import { FamaFrenchCalculator } from './FamaFrenchCalculator';
+import { ArithmeticAverageCalculator } from './ArithmeticAverageCalculator';
+import { GeometricAverageCalculator } from './GeometricAverageCalculator';
+import { EARCalculator } from './EARCalculator';
+import { VarianceCalculator } from './VarianceCalculator';
+import { UtilityCalculator } from './UtilityCalculator';
+import { RealReturnCalculator } from './RealReturnCalculator';
+import { RiskPremiumCalculator } from './RiskPremiumCalculator';
 
 export type CalculatorCategory = 'return' | 'risk' | 'performance' | 'optimization';
 
@@ -23,6 +34,8 @@ export interface CalculatorMeta {
   id: string;
   title: string;
   category: CalculatorCategory;
+  /** Optional lecture id this calculator was mentioned in (e.g. 'lecture-1') */
+  lecture?: string;
   /** Short one-line subtitle shown under the title (optional). */
   subtitle?: string;
   /** Plain English description for the info modal. */
@@ -39,6 +52,7 @@ export const calculatorsConfig: CalculatorMeta[] = [
   {
     id: 'hpr',
     title: 'Holding Period Return (HPR)',
+    lecture: 'lecture-1',
     category: 'return',
     subtitle: 'Total return over a single investment period.',
     description:
@@ -49,6 +63,7 @@ export const calculatorsConfig: CalculatorMeta[] = [
   {
     id: 'expected-return',
     title: 'Portfolio Expected Return',
+    lecture: 'lecture-1',
     category: 'return',
     subtitle: 'Weighted average of asset returns.',
     description:
@@ -64,11 +79,13 @@ export const calculatorsConfig: CalculatorMeta[] = [
     description:
       'Return on Investment (ROI) is a simple percentage measure of gain or loss relative to the initial amount invested, optionally adjusted for net contributions.',
     formulaLatex: '\\text{ROI} = \\dfrac{V_{\\text{end}} - V_{\\text{begin}} - C}{V_{\\text{begin}}}',
-    component: ROICalculator,
+    lecture: 'lecture-1',
+    component: MWRCalculator,
   },
   {
     id: 'portfolio-risk',
     title: 'Portfolio Risk (Approx.)',
+    lecture: 'lecture-2',
     category: 'risk',
     subtitle: 'Volatility from variances and average correlation.',
     description:
@@ -80,12 +97,43 @@ export const calculatorsConfig: CalculatorMeta[] = [
   {
     id: 'two-asset-variance',
     title: 'Two-Asset Portfolio Variance',
+    lecture: 'lecture-2',
     category: 'risk',
     subtitle: 'Exact variance for a 2-asset portfolio.',
     description:
       'For a two-asset portfolio, variance combines each asset variance with their correlation. This formula shows how diversification and correlation affect risk.',
     formulaLatex: '\\sigma_p^2 = w_1^2\\,\\sigma_1^2 + w_2^2\\,\\sigma_2^2 + 2 w_1 w_2\\,\\sigma_1 \\sigma_2\\,\\rho_{12}',
     component: TwoAssetVarianceCalculator,
+  },
+  {
+    id: 'covariance',
+    title: 'Covariance (sample)',
+    lecture: 'lecture-2',
+    category: 'risk',
+    subtitle: 'Covariance between two return series.',
+    description: 'Sample covariance estimates co-movement between two series; useful for portfolio variance calculations.',
+    formulaLatex: '\\text{Cov}(X,Y) = \\\dfrac{\sum (X_i - E(X))(Y_i - E(Y))}{N-1}',
+    component: CovarianceCalculator,
+  },
+  {
+    id: 'correlation',
+    title: 'Correlation Coefficient',
+    lecture: 'lecture-2',
+    category: 'risk',
+    subtitle: 'Pearson correlation between two series.',
+    description: 'Correlation standardizes covariance and ranges from -1 to 1, indicating the strength and direction of linear relationships.',
+    formulaLatex: '\\rho_{X,Y} = \\\dfrac{\\text{Cov}(X,Y)}{\\sigma_X \\sigma_Y}',
+    component: CorrelationCalculator,
+  },
+  {
+    id: 'regression',
+    title: 'Simple Linear Regression',
+    lecture: 'lecture-2',
+    category: 'risk',
+    subtitle: 'Estimate slope and intercept with OLS.',
+    description: 'Compute OLS slope and intercept for Y ~ a + b X using sample covariance/variance.',
+    formulaLatex: '\\hat{b} = \\\dfrac{\\text{Cov}(X,Y)}{\\text{Var}(X)}, \\\; \\hat{a} = E(Y) - \\hat{b} E(X)',
+    component: RegressionCalculator,
   },
   {
     id: 'beta',
@@ -95,11 +143,13 @@ export const calculatorsConfig: CalculatorMeta[] = [
     description:
       'Beta measures the sensitivity of an asset or portfolio to movements in the overall market. A beta above 1 means the asset tends to move more than the market; below 1 means it tends to move less.',
     formulaLatex: '\\beta = \\dfrac{\\text{Cov}(R_i, R_m)}{\\text{Var}(R_m)}',
+    lecture: 'lecture-3',
     component: BetaCalculator,
   },
   {
     id: 'capm',
     title: 'CAPM Expected Return',
+    lecture: 'lecture-3',
     category: 'risk',
     subtitle: 'Required return from CAPM.',
     description:
@@ -135,7 +185,18 @@ export const calculatorsConfig: CalculatorMeta[] = [
     description:
       "Jensen's alpha measures the portfolio return in excess of what CAPM would predict given its beta. A positive alpha indicates that the manager outperformed the risk-adjusted benchmark.",
     formulaLatex: '\\alpha = R_p - [R_f + \\beta_p \\big(R_m - R_f\\big)]',
+    lecture: 'lecture-3',
     component: JensenAlphaCalculator,
+  },
+  {
+    id: 'fama-french',
+    title: 'Fama-French 3-Factor Expected Return',
+    lecture: 'lecture-3',
+    category: 'risk',
+    subtitle: 'Expected return from market, SMB and HML exposures.',
+    description: 'Simple Fama-French model: expected return equals risk-free rate plus factor exposures times factor premiums.',
+    formulaLatex: 'E(R) = R_f + \beta_M (R_M - R_f) + \beta_{SMB} SMB + \beta_{HML} HML',
+    component: FamaFrenchCalculator,
   },
   {
     id: 'm-squared',
@@ -161,6 +222,7 @@ export const calculatorsConfig: CalculatorMeta[] = [
   {
     id: 'mwr',
     title: 'Money-Weighted Return (IRR)',
+    lecture: 'lecture-1',
     category: 'performance',
     subtitle: 'Internal rate of return including cash flow timing.',
     description:
@@ -171,6 +233,7 @@ export const calculatorsConfig: CalculatorMeta[] = [
   {
     id: 'weights',
     title: 'Portfolio Weights',
+    lecture: 'lecture-2',
     category: 'optimization',
     subtitle: 'Weights from asset market values.',
     description:
@@ -193,6 +256,7 @@ export const calculatorsConfig: CalculatorMeta[] = [
   {
     id: 'cml',
     title: 'Capital Market Line (CML)',
+    lecture: 'lecture-1',
     category: 'optimization',
     subtitle: 'Expected return for a chosen volatility.',
     description:
@@ -200,4 +264,74 @@ export const calculatorsConfig: CalculatorMeta[] = [
     formulaLatex: 'E(R_p) = R_f + \\dfrac{E(R_m) - R_f}{\\sigma_m} \\cdot \\sigma_p',
     component: CMLCalculator,
   },
+    {
+      id: 'arithmetic-average',
+      title: 'Arithmetic Average Return',
+      category: 'return',
+      subtitle: 'Simple average of period returns.',
+      description: 'Arithmetic average is the unweighted mean of periodic returns; useful for short-term forecasts but ignores compounding.',
+      formulaLatex: '\\bar{r} = \\dfrac{1}{n} \\sum_{t=1}^n r_t',
+      component: ArithmeticAverageCalculator,
+      lecture: 'lecture-1',
+    },
+    {
+      id: 'geometric-average',
+      title: 'Geometric Average Return',
+      category: 'return',
+      subtitle: 'Compounding-aware average (time-weighted).',
+      description: 'Geometric average accounts for compounding and is the true average growth rate over time.',
+        formulaLatex: 'r_g = \\left( \\prod_{t=1}^n (1 + r_t) \\right)^{1/n} - 1',
+      component: GeometricAverageCalculator,
+      lecture: 'lecture-1',
+    },
+    {
+      id: 'ear',
+      title: 'Effective Annual Rate (EAR)',
+      category: 'return',
+      subtitle: 'Converts APR and compounding frequency to effective annual rate.',
+      description: 'EAR shows the annualized interest rate accounting for compounding within the year.',
+        formulaLatex: 'r_{eff} = \\left(1 + \\dfrac{APR}{n} \\right)^n - 1',
+      component: EARCalculator,
+      lecture: 'lecture-1',
+    },
+    {
+      id: 'scenario-variance',
+      title: 'Scenario Expected Value & Variance',
+      category: 'risk',
+      subtitle: 'Compute E(r), variance and standard deviation from states.',
+      description: 'Given discrete states with probabilities and returns, compute the expected return, variance and standard deviation.',
+        formulaLatex: '\\sigma^2 = \\sum_s p(s) [r(s) - E(r)]^2',
+      component: VarianceCalculator,
+      lecture: 'lecture-1',
+    },
+    {
+      id: 'utility',
+      title: 'Mean-Variance Utility',
+      category: 'risk',
+      subtitle: 'Investor utility under mean-variance preferences.',
+      description: 'Utility for a risk-averse investor using a quadratic approximation: U = E(r) - 1/2 A \sigma^2.',
+        formulaLatex: 'U = E(r) - \\tfrac{1}{2} A \\sigma^2',
+      component: UtilityCalculator,
+      lecture: 'lecture-1',
+    },
+    {
+      id: 'real-return',
+      title: 'Real Return (inflation adjusted)',
+      category: 'return',
+      subtitle: 'Convert nominal returns to real returns using inflation.',
+      description: 'Computes the exact and approximate real return adjusted for inflation.',
+        formulaLatex: '1 + r = \\dfrac{1 + R}{1 + i}',
+      component: RealReturnCalculator,
+      lecture: 'lecture-1',
+    },
+    {
+      id: 'risk-premium',
+      title: 'Risk Premium',
+      category: 'return',
+      subtitle: 'Excess return over the risk-free rate.',
+      description: 'Risk premium is the expected return minus the risk-free rate.',
+      formulaLatex: 'RP = E(R) - R_f',
+      component: RiskPremiumCalculator,
+      lecture: 'lecture-1',
+    },
 ];

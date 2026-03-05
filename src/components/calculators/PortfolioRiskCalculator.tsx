@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import BlockMath from '@matejmazur/react-katex';
 import { parseNumberList } from '@/lib/calculatorUtils';
 
 export function PortfolioRiskCalculator() {
@@ -107,6 +108,14 @@ export function PortfolioRiskCalculator() {
           Approximate portfolio volatility: <span className='font-semibold'>{result}</span>
         </p>
       )}
+      <div className='pt-3 text-sm text-muted-foreground'>
+        <BlockMath math={'\\sigma_p^2 = \\sum_{i=1}^N \\sum_{j=1}^N w_i w_j \\text{Cov}(R_i, R_j)'} />
+        <div className='mt-1'>
+          <p className='font-semibold'>Parameters:</p>
+          <p>- w_i: weight of asset i (decimal)</p>
+          <p>- Cov(R_i,R_j): covariance between returns of assets i and j</p>
+        </div>
+      </div>
     </div>
   );
 }

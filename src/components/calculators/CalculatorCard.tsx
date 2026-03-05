@@ -6,6 +6,8 @@ import { ChevronDownIcon, InfoIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Modal } from '@/components/ui/modal';
+import { Badge } from '@/components/ui/badge';
+import { getLectureAccent } from '../../configs/lectureConfig';
 import { cn } from '@/lib/utils';
 
 import type { CalculatorMeta } from './config';
@@ -49,6 +51,18 @@ export function CalculatorCard({ meta, children }: CalculatorCardProps) {
             <p className='text-xs font-medium uppercase tracking-wide text-muted-foreground'>{categoryLabel}</p>
             <p className='text-sm font-semibold text-slate-50'>{meta.title}</p>
             {meta.subtitle && <p className='text-xs text-muted-foreground'>{meta.subtitle}</p>}
+            {meta.lecture && (
+              (() => {
+                const accent = getLectureAccent(meta.lecture);
+                const cls = accent ? accent.className : 'bg-muted text-muted-foreground';
+                const label = accent ? accent.label : meta.lecture;
+                return (
+                  <div className='mt-1'>
+                    <Badge className={cls}>{label}</Badge>
+                  </div>
+                );
+              })()
+            )}
           </div>
           <div className='flex items-start gap-2'>
             <Button

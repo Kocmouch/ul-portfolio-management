@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import BlockMath from '@matejmazur/react-katex';
 
 export function BetaCalculator() {
   const [covariance, setCovariance] = useState('');
@@ -60,6 +61,14 @@ export function BetaCalculator() {
           Beta: <span className='font-semibold'>{result}</span>
         </p>
       )}
+      <div className='pt-3 text-sm text-muted-foreground'>
+        <BlockMath math={'\\beta_i = \\frac{\\text{Cov}(R_i, R_M)}{\\text{Var}(R_M)}'} />
+        <div className='mt-1'>
+          <p className='font-semibold'>Parameters:</p>
+          <p>- Cov(R_i, R_M): covariance of asset and market returns</p>
+          <p>- Var(R_M): variance of market returns</p>
+        </div>
+      </div>
     </div>
   );
 }

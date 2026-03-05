@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import BlockMath from '@matejmazur/react-katex';
 
 export function CMLCalculator() {
   const [riskFreeRate, setRiskFreeRate] = useState('');
@@ -91,6 +92,16 @@ export function CMLCalculator() {
           </p>
         </div>
       )}
+      <div className='pt-3 text-sm text-muted-foreground'>
+        <BlockMath math={'E(R_p) = R_f + \\dfrac{E(R_m) - R_f}{\\sigma_m} \\cdot \\sigma_p'} />
+        <div className='mt-1'>
+          <p className='font-semibold'>Parameters:</p>
+          <p>- R_f: risk-free rate (decimal)</p>
+          <p>- E(R_m): expected market return (decimal)</p>
+          <p>- σ_m: market portfolio volatility (standard deviation)</p>
+          <p>- σ_p: chosen portfolio volatility</p>
+        </div>
+      </div>
     </div>
   );
 }
