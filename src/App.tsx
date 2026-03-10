@@ -8,18 +8,28 @@ import { LandingPage, DashboardPage, DocsPage, ToolsPage, CalculatorsPage, Predi
 import './index.css';
 
 const ROUTE_HASH_KEY = 'pm_route';
+const BASE_PATH = '/portfolio-management';
+const ROUTES: Route[] = ['dashboard', 'docs', 'tools', 'calculators', 'predictive'];
+
+const getRouteFromSearch = (search: string): Route => {
+  const params = new URLSearchParams(search);
+  const page = params.get('page');
+  if (page && ROUTES.includes(page as Route)) {
+    return page as Route;
+  }
+  return 'landing';
+};
 
 function getInitialRoute(): Route {
   if (typeof window === 'undefined') return 'landing';
 
-  const path = window.location.pathname.replace('/', '');
-
-  if (path === 'dashboard' || path === 'docs' || path === 'tools' || path === 'calculators' || path === 'predictive') {
-    return path as Route;
+  const initial = getRouteFromSearch(window.location.search);
+  if (initial !== 'landing') {
+    return initial;
   }
 
   const stored = window.localStorage.getItem(ROUTE_HASH_KEY) as Route | null;
-  if (stored === 'dashboard' || stored === 'docs' || stored === 'tools' || stored === 'calculators' || stored === 'predictive') {
+  if (stored && ROUTES.includes(stored)) {
     return stored;
   }
 
@@ -34,13 +44,6 @@ export function App() {
   // On first load, check if we already have an auth cookie.
   useEffect(() => {
     // Redirect hash-based URLs (e.g. /#dashboard) to pathname-based URLs (/dashboard)
-    if (typeof window !== 'undefined' && window.location.hash) {
-      const hash = window.location.hash.replace('#', '');
-      if (['dashboard', 'docs', 'tools', 'calculators', 'predictive'].includes(hash)) {
-        window.history.replaceState({}, '', `/${hash}`);
-        setRoute(hash as Route);
-      }
-    }
 
     if (hasAuthCookie()) {
       setIsAuthed(true);
@@ -114,7 +117,7 @@ export function App() {
     setRoute(next);
     if (typeof window !== 'undefined') {
       try {
-        const nextPath = next === 'landing' ? '/' : `/${next}`;
+        const nextPath = next === 'landing' ? BASE_PATH : `${BASE_PATH}/?page=${next}`;
         window.history.pushState({}, '', nextPath);
 
         if (next === 'landing') {
