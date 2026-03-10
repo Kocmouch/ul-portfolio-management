@@ -5,12 +5,12 @@
  * It is included in `src/index.html`.
  */
 
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import { App } from "./App";
-import "katex/dist/katex.min.css";
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { App } from './App';
+import 'katex/dist/katex.min.css';
 
-const elem = document.getElementById("root")!;
+const elem = document.getElementById('root')!;
 const app = (
   <StrictMode>
     <App />
@@ -18,6 +18,10 @@ const app = (
 );
 
 if (import.meta.hot) {
+  console.log('🔥 HMR enabled');
+  import.meta.hot.accept(() => {
+    console.log('♻️ HMR update accepted');
+  });
   // With hot module reloading, `import.meta.hot.data` is persisted.
   const root = (import.meta.hot.data.root ??= createRoot(elem));
   root.render(app);

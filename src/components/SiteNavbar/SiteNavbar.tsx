@@ -46,6 +46,7 @@ export function SiteNavbar({ currentRoute, onNavigate, onLogout, theme, onToggle
           {navButton('docs', 'Docs')}
           {navButton('tools', 'Tools')}
           {navButton('calculators', 'Calculators')}
+          {navButton('predictive', 'Predictive')}
           <Button type='button' variant='ghost' size='sm' className='px-2' aria-label='Toggle theme' onClick={onToggleTheme}>
             {theme === 'dark' ? '☾' : '☀︎'}
           </Button>

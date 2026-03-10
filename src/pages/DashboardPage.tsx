@@ -14,12 +14,12 @@ export function DashboardPage({ onNavigate }: DashboardPageProps) {
           Welcome to Portfolio Management
         </Typography>
         <Typography variant='body2' className='mt-2 max-w-2xl text-muted-foreground sm:text-sm md:text-base'>
-          Use this hub during the course to access core theory, structured tools, and live calculators for portfolio
-          construction, risk, and performance analysis.
+          Use this hub during the course to access core theory, structured tools, and live calculators for portfolio construction,
+          risk, and performance analysis.
         </Typography>
       </div>
 
-      <div className='grid gap-4 md:grid-cols-3'>
+      <div className='grid gap-4 md:grid-cols-2'>
         <Card
           className='cursor-pointer border-border bg-card transition hover:-translate-y-0.5 hover:border-ring hover:shadow-lg hover:shadow-black/20'
           onClick={() => onNavigate('docs')}
@@ -55,9 +55,19 @@ export function DashboardPage({ onNavigate }: DashboardPageProps) {
             </CardDescription>
           </CardHeader>
         </Card>
+
+        <Card
+          className='cursor-pointer border-border bg-card transition hover:-translate-y-0.5 hover:border-ring hover:shadow-lg hover:shadow-black/20'
+          onClick={() => onNavigate('predictive')}
+        >
+          <CardHeader>
+            <CardTitle className='text-lg'>Predictive & Simulation</CardTitle>
+            <CardDescription>
+              Monte Carlo simulations and ML-based forecasting for portfolio outcome distributions.
+            </CardDescription>
+          </CardHeader>
+        </Card>
       </div>
     </section>
   );
 }
-
-

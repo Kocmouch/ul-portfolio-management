@@ -1,29 +1,28 @@
-import { useMemo, useState } from 'react';
-
+import React, { useMemo, useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { parseNumberList } from '@/lib/calculatorUtils';
-import BlockMath from '@matejmazur/react-katex';
+import TeX from '@matejmazur/react-katex';
 import InteractiveChart from '@/components/ui/InteractiveChart';
 import ChartJSChart from '@/components/ui/ChartJSChart';
 
 export function GeometricAverageCalculator() {
-  const [returnsInput, setReturnsInput] = useState('');
+  const [returnsInput, setReturnsInput] = useState('0.15 -0.05 0.10 0.12');
   const [result, setResult] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const handleCalculate = () => {
+  useEffect(() => {
     const parsed = parseNumberList(returnsInput);
     if (!parsed || parsed.length === 0) {
-      setError('Please enter numeric return values.');
+      setError('Please enter numeric values.');
       setResult(null);
       return;
     }
 
     const returnsArr: number[] = parsed as number[];
     if (returnsArr.some((r) => r <= -1)) {
-      setError('Returns must be greater than -100% for geometric mean.');
+      setError('Returns must be > -100%.');
       setResult(null);
       return;
     }
@@ -33,7 +32,7 @@ export function GeometricAverageCalculator() {
     const geom = Math.pow(product, 1 / returnsArr.length) - 1;
     setError(null);
     setResult(`${(geom * 100).toFixed(2)}%`);
-  };
+  }, [returnsInput]);
 
   const series = useMemo(() => {
     const returnsArr: number[] = parseNumberList(returnsInput) ?? [];
@@ -65,40 +64,55 @@ export function GeometricAverageCalculator() {
           onChange={(e) => setReturnsInput(e.target.value)}
         />
       </div>
-      <Button type='button' size='sm' onClick={handleCalculate}>
-        Calculate
-      </Button>
       {error && <p className='text-sm text-destructive'>{error}</p>}
       {result && !error && (
-        <p className='text-sm text-emerald-500'>Geometric average (time-weighted): <span className='font-semibold'>{result}</span></p>
-      )}
-        <div className='pt-3 text-sm text-muted-foreground'>
-          <BlockMath math={'r_g = \\left[\\prod_{i=1}^n (1 + r_i)\\right]^{1/n} - 1'} />
-          <div className='mt-1'>
-            <p className='font-semibold'>Parameters:</p>
-            <p>- r_i: periodic returns (decimal)</p>
-            <p>- n: number of periods</p>
-          </div>
+        <div className='rounded-lg bg-emerald-500/10 p-3 text-sm text-emerald-500 border border-emerald-500/20'>
+          <p>
+            Geometric average: <span className='font-bold text-base'>{result}</span>
+          </p>
         </div>
+      )}
+
+      <div className='pt-3 border-t border-border mt-4'>
+        <div className='text-xl mb-4'>
+          <TeX block math={'\\bar{r}_g = \\left[\\prod_{i=1}^n (1 + r_i)\\right]^{1/n} - 1'} />
+        </div>
+        <div className='space-y-1 text-sm text-muted-foreground'>
+          <p className='font-medium text-foreground mb-1'>Parameters:</p>
+          <p>
+            <TeX math='r_i' />: Periodic return in period <TeX math='i' />
+          </p>
+          <p>
+            <TeX math='n' />: Total number of periods
+          </p>
+        </div>
+      </div>
 
       {series.length > 0 && (
-        <div className='pt-4'>
-          <div className='flex items-center justify-between'>
-            <h4 className='text-sm font-semibold mb-2'>Interactive chart</h4>
+        <div className='pt-4 border-t border-border mt-4'>
+          <div className='flex items-center justify-between mb-4'>
+            <h4 className='text-sm font-semibold'>Cumulative growth visualization</h4>
             <div className='flex items-center gap-2'>
-              <label className='text-sm text-muted-foreground'>Use Chart.js</label>
-              <Button size='sm' type='button' onClick={() => setUseChartJs((s) => !s)}>{useChartJs ? 'Switch to SVG' : 'Switch to Chart.js'}</Button>
+              <span className='text-xs text-muted-foreground'>Engine</span>
+              <Button
+                size='sm'
+                variant='outline'
+                className='h-7 text-xs px-2'
+                type='button'
+                onClick={() => setUseChartJs((s) => !s)}
+              >
+                {useChartJs ? 'SVG' : 'Chart.js'}
+              </Button>
             </div>
           </div>
 
-          {useChartJs ? (
+          {useChartJs ?
             <ChartJSChart series={series} width={640} height={260} />
-          ) : (
-            <InteractiveChart series={series} width={640} height={260} />
-          )}
+          : <InteractiveChart series={series} width={640} height={260} />}
         </div>
       )}
-
     </div>
   );
 }
+
+export default GeometricAverageCalculator;

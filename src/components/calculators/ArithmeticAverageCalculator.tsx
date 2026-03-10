@@ -3,12 +3,12 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import BlockMath from '@matejmazur/react-katex';
+import TeX from '@matejmazur/react-katex';
 import { parseNumberList } from '@/lib/calculatorUtils';
 import ChartTools from '@/components/tools/ChartTools';
 
-export function ArithmeticAverageCalculator() {
-  const [returnsInput, setReturnsInput] = useState('');
+function ArithmeticAverageCalculator() {
+  const [returnsInput, setReturnsInput] = useState('0.12 -0.05 0.08 0.15');
   const [result, setResult] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [showChart, setShowChart] = useState(false);
@@ -44,14 +44,22 @@ export function ArithmeticAverageCalculator() {
         {error && <p className='text-sm text-destructive'>{error}</p>}
       </div>
       {result && !error && (
-        <p className='text-sm text-emerald-500'>Arithmetic average: <span className='font-semibold'>{result}</span></p>
+        <p className='text-sm text-emerald-500'>
+          Arithmetic average: <span className='font-semibold'>{result}</span>
+        </p>
       )}
-      <div className='pt-3 text-sm text-muted-foreground'>
-        <BlockMath math={'\\text{Arithmetic Average} = \\frac{1}{n} \\sum_{i=1}^n r_i'} />
-        <div className='mt-1'>
-          <p className='font-semibold'>Parameters:</p>
-          <p>- r_i: periodic returns (decimal)</p>
-          <p>- n: number of periods</p>
+      <div className='pt-3 border-t border-border mt-4'>
+        <div className='text-md mb-4'>
+          <TeX block math={'\\bar{r} = \\frac{1}{n} \\sum_{i=1}^n r_i'} />
+        </div>
+        <div className='space-y-1 text-sm text-muted-foreground'>
+          <p className='font-medium text-foreground mb-1'>Parameters:</p>
+          <p>
+            <TeX math='r_i' />: Periodic return in period <TeX math='i' />
+          </p>
+          <p>
+            <TeX math='n' />: Number of periods
+          </p>
         </div>
       </div>
 
@@ -64,3 +72,5 @@ export function ArithmeticAverageCalculator() {
     </div>
   );
 }
+
+export default ArithmeticAverageCalculator;

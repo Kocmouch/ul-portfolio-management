@@ -1,6 +1,6 @@
 import { describe, test, expect } from 'bun:test';
 
-await import('../../../test/setup-dom');
+await import('./setup-dom');
 const { render, screen, fireEvent, cleanup } = await import('@testing-library/react');
 
 // make sure we unmount after each test to prevent leftover buttons/outputs
@@ -10,8 +10,8 @@ afterEach(() => {
   cleanup();
 });
 
-import { ArithmeticAverageCalculator } from './ArithmeticAverageCalculator';
-import { RegressionCalculator } from './RegressionCalculator';
+import { ArithmeticAverageCalculator } from '../src/components/calculators/ArithmeticAverageCalculator';
+import { RegressionCalculator } from '../src/components/calculators/RegressionCalculator';
 
 // smoke tests verifying automatic calculation and chart toggle
 

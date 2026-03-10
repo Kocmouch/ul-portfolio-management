@@ -4,7 +4,7 @@ export { CAPMCalculator } from './CAPMCalculator';
 export { CMLCalculator } from './CMLCalculator';
 export { ExpectedReturnCalculator } from './ExpectedReturnCalculator';
 export { HPRCalculator } from './HPRCalculator';
-export { ArithmeticAverageCalculator } from './ArithmeticAverageCalculator';
+export { default as ArithmeticAverageCalculator } from './ArithmeticAverageCalculator';
 export { GeometricAverageCalculator } from './GeometricAverageCalculator';
 export { EARCalculator } from './EARCalculator';
 export { VarianceCalculator } from './VarianceCalculator';

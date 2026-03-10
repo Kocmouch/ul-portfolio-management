@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import BlockMath from '@matejmazur/react-katex';
+import TeX from '@matejmazur/react-katex';
 import { ChevronDownIcon, InfoIcon } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -41,17 +41,24 @@ export function CalculatorCard({ meta, children }: CalculatorCardProps) {
   return (
     <>
       <Card className='border-border bg-card'>
-        <button
-          type='button'
-          className='flex w-full items-start justify-between gap-3 px-6 pb-4 text-left'
+        <div
+          role='button'
+          tabIndex={0}
+          className='flex w-full cursor-pointer items-start justify-between gap-3 px-6 pb-4 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
           onClick={() => setOpen((prev) => !prev)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              setOpen((prev) => !prev);
+            }
+          }}
           aria-expanded={open}
         >
           <div className='space-y-1'>
             <p className='text-xs font-medium uppercase tracking-wide text-muted-foreground'>{categoryLabel}</p>
             <p className='text-sm font-semibold text-slate-50'>{meta.title}</p>
             {meta.subtitle && <p className='text-xs text-muted-foreground'>{meta.subtitle}</p>}
-            {meta.lecture && (
+            {meta.lecture &&
               (() => {
                 const accent = getLectureAccent(meta.lecture);
                 const cls = accent ? accent.className : 'bg-muted text-muted-foreground';
@@ -61,8 +68,7 @@ export function CalculatorCard({ meta, children }: CalculatorCardProps) {
                     <Badge className={cls}>{label}</Badge>
                   </div>
                 );
-              })()
-            )}
+              })()}
           </div>
           <div className='flex items-start gap-2'>
             <Button
@@ -85,19 +91,23 @@ export function CalculatorCard({ meta, children }: CalculatorCardProps) {
               />
             </span>
           </div>
-        </button>
+        </div>
         {open && <CardContent className='pb-5 pt-1'>{children}</CardContent>}
       </Card>
 
       <Modal open={infoOpen} onOpenChange={setInfoOpen} title={meta.title} description={meta.subtitle ?? undefined}>
-        <p>{meta.description}</p>
-        <div className='pt-2'>
-          <BlockMath math={meta.formulaLatex} />
-          {meta.extraLatex && (
-            <div className='mt-1 text-xs text-muted-foreground'>
-              <BlockMath math={meta.extraLatex} />
+        <div className='space-y-4 pt-2'>
+          <p className='text-sm text-muted-foreground'>{meta.description}</p>
+          <div className='rounded-xl bg-muted/50 p-6 border border-border/50'>
+            <div className='text-xl sm:text-2xl'>
+              <TeX block math={meta.formulaLatex} />
             </div>
-          )}
+            {meta.extraLatex && (
+              <div className='mt-4 pt-4 border-t border-border/30 text-sm opacity-80'>
+                <TeX block math={meta.extraLatex} />
+              </div>
+            )}
+          </div>
         </div>
       </Modal>
     </>

@@ -3,7 +3,7 @@ import { type ReactNode, useEffect, useState } from 'react';
 import { SiteNavbar } from '@/components/SiteNavbar';
 import type { Theme, Route } from '@/types/app';
 import { clearAuth, hasAuthCookie, setAuthCookie } from '@/lib/auth';
-import { LandingPage, DashboardPage, DocsPage, ToolsPage, CalculatorsPage } from '@/pages';
+import { LandingPage, DashboardPage, DocsPage, ToolsPage, CalculatorsPage, PredictiveToolsPage } from '@/pages';
 
 import './index.css';
 
@@ -12,14 +12,14 @@ const ROUTE_HASH_KEY = 'pm_route';
 function getInitialRoute(): Route {
   if (typeof window === 'undefined') return 'landing';
 
-  const hash = window.location.hash.replace('#', '');
+  const path = window.location.pathname.replace('/', '');
 
-  if (hash === 'dashboard' || hash === 'docs' || hash === 'tools' || hash === 'calculators') {
-    return hash;
+  if (path === 'dashboard' || path === 'docs' || path === 'tools' || path === 'calculators' || path === 'predictive') {
+    return path as Route;
   }
 
   const stored = window.localStorage.getItem(ROUTE_HASH_KEY) as Route | null;
-  if (stored === 'dashboard' || stored === 'docs' || stored === 'tools' || stored === 'calculators') {
+  if (stored === 'dashboard' || stored === 'docs' || stored === 'tools' || stored === 'calculators' || stored === 'predictive') {
     return stored;
   }
 
@@ -33,10 +33,19 @@ export function App() {
 
   // On first load, check if we already have an auth cookie.
   useEffect(() => {
+    // Redirect hash-based URLs (e.g. /#dashboard) to pathname-based URLs (/dashboard)
+    if (typeof window !== 'undefined' && window.location.hash) {
+      const hash = window.location.hash.replace('#', '');
+      if (['dashboard', 'docs', 'tools', 'calculators', 'predictive'].includes(hash)) {
+        window.history.replaceState({}, '', `/${hash}`);
+        setRoute(hash as Route);
+      }
+    }
+
     if (hasAuthCookie()) {
       setIsAuthed(true);
       setRoute((current) => {
-        // If we came in with a specific route (e.g. from hash/localStorage), keep it;
+        // If we came in with a specific route (e.g. from pathname or localStorage), keep it;
         // otherwise default authenticated users to dashboard.
         if (current === 'landing') return 'dashboard';
         return current;
@@ -76,6 +85,15 @@ export function App() {
     }
   }, [theme]);
 
+  // Handle back/forward buttons
+  useEffect(() => {
+    const onPopState = () => {
+      setRoute(getInitialRoute());
+    };
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, []);
+
   const toggleTheme = () => {
     setTheme((current) => (current === 'dark' ? 'light' : 'dark'));
   };
@@ -83,24 +101,25 @@ export function App() {
   const handleAuthenticated = (remember: boolean) => {
     setIsAuthed(true);
     setAuthCookie(remember);
-    setRoute('dashboard');
+    handleNavigate('dashboard');
   };
 
   const handleLogout = () => {
     clearAuth();
     setIsAuthed(false);
-    setRoute('landing');
+    handleNavigate('landing');
   };
 
   const handleNavigate = (next: Route) => {
     setRoute(next);
     if (typeof window !== 'undefined') {
       try {
+        const nextPath = next === 'landing' ? '/' : `/${next}`;
+        window.history.pushState({}, '', nextPath);
+
         if (next === 'landing') {
-          window.location.hash = '';
           window.localStorage.removeItem(ROUTE_HASH_KEY);
         } else {
-          window.location.hash = `#${next}`;
           window.localStorage.setItem(ROUTE_HASH_KEY, next);
         }
       } catch {
@@ -139,15 +158,17 @@ export function App() {
 
   switch (route) {
     case 'dashboard':
-      return protectedRoute(<DashboardPage onNavigate={setRoute} />);
+      return protectedRoute(<DashboardPage onNavigate={handleNavigate} />);
     case 'docs':
       return protectedRoute(<DocsPage />);
     case 'tools':
       return protectedRoute(<ToolsPage />);
     case 'calculators':
       return protectedRoute(<CalculatorsPage />);
+    case 'predictive':
+      return protectedRoute(<PredictiveToolsPage />);
     default:
-      return protectedRoute(<DashboardPage onNavigate={setRoute} />);
+      return protectedRoute(<DashboardPage onNavigate={handleNavigate} />);
   }
 }
 export default App;

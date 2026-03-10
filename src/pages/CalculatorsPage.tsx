@@ -20,16 +20,6 @@ export function CalculatorsPage() {
   const [categoryFilter, setCategoryFilter] = useState<'all' | CalculatorCategory>('all');
   const [lectureFilter, setLectureFilter] = useState<'all' | string>('all');
 
-  // Persist last visited route in the URL hash (simple client-side routing support).
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    try {
-      window.location.hash = '#calculators';
-    } catch {
-      // ignore
-    }
-  }, []);
-
   const filteredCalculators = useMemo(() => {
     const query = filter.trim().toLowerCase();
 
@@ -40,8 +30,9 @@ export function CalculatorsPage() {
       return categoryOk && lectureOk;
     });
 
-    const matched = query
-      ? byCategoryAndLecture.filter((calculator) => {
+    const matched =
+      query ?
+        byCategoryAndLecture.filter((calculator) => {
           const haystack = [calculator.title, calculator.subtitle ?? '', calculator.category, calculator.description]
             .join(' ')
             .toLowerCase();
@@ -60,7 +51,7 @@ export function CalculatorsPage() {
     });
 
     return matched;
-  }, [filter, categoryFilter, lectureFilter]);
+  }, [filter, categoryFilter, lectureFilter, calculatorsConfig]);
 
   const leftColumn: typeof filteredCalculators = [];
   const rightColumn: typeof filteredCalculators = [];
@@ -126,7 +117,7 @@ export function CalculatorsPage() {
               {info.label}
             </Button>
           ))}
-          </div>
+        </div>
       </div>
 
       <div className='flex flex-col gap-4 md:flex-row md:items-start'>
